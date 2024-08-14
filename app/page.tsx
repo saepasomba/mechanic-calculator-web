@@ -1,113 +1,309 @@
-import Image from "next/image";
+"use client";
+import Section from "@/components/section";
+import {
+  Badge,
+  Box,
+  Button,
+  Center,
+  Divider,
+  Flex,
+  FormControl,
+  FormLabel,
+  Heading,
+  HStack,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  Slider,
+  SliderFilledTrack,
+  SliderMark,
+  SliderThumb,
+  SliderTrack,
+  Table,
+  TableCaption,
+  TableContainer,
+  Tbody,
+  Td,
+  Text,
+  Tfoot,
+  Th,
+  Thead,
+  Tr,
+  VStack,
+} from "@chakra-ui/react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 
-export default function Home() {
+function TopCard() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+    <>
+      <Center bg="" color={"white"} my={10}>
+        <Center
+          flexDir={"column"}
+          bg="blue.900"
+          w="100%"
+          px={5}
+          py={3}
+          borderRadius={15}
+          boxShadow={"dark-lg"}
+        >
+          <Flex w="100%">
+            <Text fontSize={"xl"} fontWeight={"bold"} mb={2}>
+              Quick Info
+            </Text>
+          </Flex>
 
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
+          <Flex justifyContent={"space-between"} w="100%">
+            <Text fontWeight={"bold"}>Total Penghasilan</Text>
+            <Text>$0</Text>
+          </Flex>
+
+          <Flex justifyContent={"space-between"} w="100%">
+            <Text opacity={0.4}>Total Modal</Text>
+            <Text>$0</Text>
+          </Flex>
+
+          <Flex justifyContent={"space-between"} w="100%">
+            <Text opacity={0.4}>Total Keuntungan</Text>
+            <Text>$0</Text>
+          </Flex>
+        </Center>
+      </Center>
+    </>
+  );
+}
+
+interface BodyFormInterface {
+  componentHandler: (e: number) => void;
+  profitHandler: (e: number) => void;
+  profitValue: number;
+  componenInput: number;
+}
+
+function BodyForm({
+  componentHandler,
+  profitHandler,
+  profitValue,
+  componenInput,
+}: BodyFormInterface) {
+  const labelStyles = {
+    mt: "2",
+    ml: "-2.5",
+    fontSize: "sm",
+    opacity: 0.5,
+  };
+
+  const componentStringHandler = (value: string) =>
+    componentHandler(Number(value));
+  const profitStringHandler = (value: string) => profitHandler(Number(value));
+
+  return (
+    <>
+      <Section>
+        <Section.Header headerTitle="Input Detail" />
+        <Section.Body>
+          <Flex flexDir={"column"} gap={5}>
+            <FormControl>
+              <FormLabel color="white">Persentase Keuntungan</FormLabel>
+              <HStack w={"100%"}>
+                <HStack mr={1} w="50%">
+                  <NumberInput
+                    value={`${profitValue}`}
+                    onChange={profitStringHandler}
+                    min={0}
+                    max={100}
+                  >
+                    <NumberInputField />
+                    <NumberInputStepper>
+                      <NumberIncrementStepper color="white" />
+                      <NumberDecrementStepper color="white" />
+                    </NumberInputStepper>
+                  </NumberInput>
+                  <Text>%</Text>
+                </HStack>
+                <Slider
+                  focusThumbOnChange={false}
+                  value={profitValue}
+                  onChange={profitHandler}
+                  w={"100%"}
+                >
+                  <SliderMark value={25} {...labelStyles}>
+                    25%
+                  </SliderMark>
+                  <SliderMark value={50} {...labelStyles}>
+                    50%
+                  </SliderMark>
+                  <SliderMark value={75} {...labelStyles}>
+                    75%
+                  </SliderMark>
+                  <SliderTrack>
+                    <SliderFilledTrack />
+                  </SliderTrack>
+                  <SliderThumb fontSize="sm" boxSize={5} />
+                </Slider>
+              </HStack>
+            </FormControl>
+
+            <FormControl>
+              <FormLabel color="white">Jumlah Component</FormLabel>
+              <NumberInput
+                min={0}
+                value={componenInput}
+                onChange={componentStringHandler}
+              >
+                <NumberInputField placeholder="0" />
+                <NumberInputStepper>
+                  <NumberIncrementStepper color="white" />
+                  <NumberDecrementStepper color="white" />
+                </NumberInputStepper>
+              </NumberInput>
+            </FormControl>
+          </Flex>
+        </Section.Body>
+      </Section>
+    </>
+  );
+}
+
+interface CalculateViewInterface {
+  componentInput: number;
+  profitPercentage: number;
+  finalPrice: number;
+}
+
+function CalculateView({
+  componentInput,
+  profitPercentage,
+  finalPrice,
+}: CalculateViewInterface) {
+  let capital = componentInput * 0.55;
+  capital = Number(capital.toFixed(2));
+
+  let profit = capital * (profitPercentage / 100);
+  profit = Number(profit.toFixed(2));
+
+  return (
+    <>
+      <Section>
+        <Section.Header
+          headerTitle="Perhitungan Harga"
+          headerSubTitle="(Jumlah comp * Harga comp) * (100 + persentase profit)% = harga"
         />
-      </div>
+        <Section.Body>
+          <Flex flexDir={"column"} gap={5}>
+            <HStack>
+              <Text>
+                ({componentInput} * 0.55) * {100 + profitPercentage}% ={" "}
+              </Text>
+              <Text fontSize={"3xl"} fontWeight={"bold"} color="green.500">
+                ${finalPrice}
+              </Text>
+            </HStack>
 
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+            <Box>
+              <Text fontSize={"l"} fontWeight={"bold"}>
+                Detail
+              </Text>
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
+              <TableContainer>
+                <Table variant="simple" size={"sm"} colorScheme="whiteAlpha">
+                  <Thead>
+                    <Tr>
+                      <Th>Perhitungan</Th>
+                      <Th isNumeric>Nominal</Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    <Tr>
+                      <Td>Modal</Td>
+                      <Td isNumeric>${capital}</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Untung</Td>
+                      <Td isNumeric>${profit}</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Total</Td>
+                      <Td isNumeric>${finalPrice}</Td>
+                    </Tr>
+                  </Tbody>
+                </Table>
+              </TableContainer>
+            </Box>
+          </Flex>
+        </Section.Body>
+      </Section>
+    </>
+  );
+}
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
+export default function Dashboard() {
+  const [componentInput, setComponentInput] = useState(0);
+  const [profitPercentage, setProfitPercentage] = useState(10);
+  const [finalPrice, setFinalPrice] = useState(0);
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+  const handleInputChange = (e: number) => setComponentInput(e);
+  const handleProfitChange = (e: number) => setProfitPercentage(e);
+
+  useEffect(() => {
+    if (profitPercentage.toString() == "-") {
+      setProfitPercentage(0);
+    }
+
+    if (profitPercentage > 100) {
+      setProfitPercentage(100);
+    } else if (profitPercentage < 0) {
+      setProfitPercentage(0);
+    }
+  }, [profitPercentage]);
+
+  useEffect(() => {
+    if (componentInput < 0) {
+      setComponentInput(0);
+    }
+  }, [componentInput]);
+
+  useEffect(() => {
+    let capital: number = componentInput * 0.55;
+    let finalPrice = capital * ((100 + profitPercentage) / 100);
+    finalPrice = Number(finalPrice.toFixed(2));
+    setFinalPrice(finalPrice);
+  }, [componentInput, profitPercentage]);
+
+  return (
+    <Box>
+      <Center color="white" my={5}>
+        <Heading as={"h1"} textAlign={"center"}>
+          Mechanic Calculator{" "}
+          <Badge ml={2} fontSize={"xl"}>
+            Lite
+          </Badge>
+        </Heading>
+      </Center>
+
+      <Divider my={5} />
+
+      <VStack spacing={12}>
+        {/* <TopCard /> */}
+
+        {/* <Divider /> */}
+
+        <CalculateView
+          componentInput={componentInput}
+          profitPercentage={profitPercentage}
+          finalPrice={finalPrice}
+        />
+
+        {/* <Divider /> */}
+
+        <BodyForm
+          componentHandler={handleInputChange}
+          profitHandler={handleProfitChange}
+          profitValue={profitPercentage}
+          componenInput={componentInput}
+        />
+      </VStack>
+    </Box>
   );
 }
