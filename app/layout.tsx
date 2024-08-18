@@ -1,5 +1,6 @@
 import MainLayout from "@/layouts/MainLayout";
 import { Providers } from "./providers";
+import { Analytics } from "@vercel/analytics/react";
 
 export default function RootLayout({
   children,
@@ -12,6 +13,7 @@ export default function RootLayout({
         <Providers>
           <MainLayout>{children}</MainLayout>
         </Providers>
+        <Analytics />
       </body>
     </html>
   );
