@@ -59,7 +59,10 @@ export default function Dashboard() {
         </Heading>
         <Text textAlign={"left"} w="100%" fontSize={"sm"} color={"gray.400"}>
           Made by{" "}
-          <Link href="https://jogjagamers.org/profile/18469-overcast/">
+          <Link
+            href="https://jogjagamers.org/profile/18469-overcast/"
+            target="_blank"
+          >
             <Text
               as={"span"}
               fontWeight={"bold"}

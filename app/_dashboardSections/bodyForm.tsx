@@ -16,6 +16,7 @@ import {
   SliderTrack,
   Text,
 } from "@chakra-ui/react";
+import { FaCog } from "react-icons/fa";
 
 interface BodyFormInterface {
   componentHandler: (e: number) => void;
