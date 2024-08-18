@@ -21,10 +21,10 @@ function Header({
 }: HeaderInterface) {
   return (
     <Box w={"100%"}>
-      <Heading as={"h2"} size={"lg"}>
+      <Heading as={"h2"} fontSize={"x-large"}>
         {title}
       </Heading>
-      <Text fontSize={"2xs"} opacity={0.4}>
+      <Text fontSize={"2xs"} color={"gray.400"}>
         {subTitle}
       </Text>
     </Box>

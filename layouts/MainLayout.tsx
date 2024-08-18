@@ -7,19 +7,10 @@ interface MainLayoutInterface {
 
 export default function MainLayout({ children }: MainLayoutInterface) {
   return (
-    <Center flexDir={"column"} bg="gray.800" maxW={"100%"}>
-      <Box minH="100vh" maxW="25rem" py={5} mx={2} color="white">
+    <Center flexDir={"column"} bg="gray.50" maxW={"100%"}>
+      <Box minH="100vh" maxW="25rem" py={5} mx={2} color="gray.900">
         {children}
       </Box>
-      <Center bg="black" color="gray.400" w={"100vw"} py={1}>
-        <Text textAlign={"center"} fontSize={"sm"}>
-          Made by{" "}
-          <Link href="https://jogjagamers.org/profile/18469-overcast/">
-            <Text as={"u"}>@Overcast</Text>
-          </Link>{" "}
-          / Len Duffield (( Sae )) with ❤️
-        </Text>
-      </Center>
     </Center>
   );
 }
