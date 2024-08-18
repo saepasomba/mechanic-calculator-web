@@ -14,6 +14,7 @@ import {
 import React, { ChangeEvent, useEffect, useState } from "react";
 import CalculateView from "./_dashboardSections/calculateView";
 import BodyForm from "./_dashboardSections/bodyForm";
+import { Analytics } from "@vercel/analytics/react";
 
 export default function Dashboard() {
   const [componentInput, setComponentInput] = useState(0);
@@ -51,7 +52,7 @@ export default function Dashboard() {
   return (
     <Box>
       <Center my={5} flexDir={"column"}>
-        <Heading as={"h1"} fontSize={"xx-large"} textAlign={"center"}>
+        <Heading as={"h1"} fontSize={"xx-large"} textAlign={"left"}>
           Mechanic Calculator
           <Badge ml={2} fontSize={"xl"} colorScheme={"blue"}>
             Lite
