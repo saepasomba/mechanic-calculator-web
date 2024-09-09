@@ -2,6 +2,7 @@ import Section from "@/components/section";
 import {
   Flex,
   FormControl,
+  FormHelperText,
   FormLabel,
   HStack,
   NumberDecrementStepper,
@@ -19,17 +20,19 @@ import {
 import { FaCog } from "react-icons/fa";
 
 interface BodyFormInterface {
-  componentHandler: (e: number) => void;
+  componentHandler: (e: string) => void;
   profitHandler: (e: number) => void;
   profitValue: number;
-  componenInput: number;
+  componentInput: string;
+  totalComponent: number;
 }
 
 export default function BodyForm({
   componentHandler,
   profitHandler,
   profitValue,
-  componenInput,
+  componentInput,
+  totalComponent,
 }: BodyFormInterface) {
   const labelStyles = {
     mt: "2",
@@ -38,8 +41,7 @@ export default function BodyForm({
     opacity: 0.5,
   };
 
-  const componentStringHandler = (value: string) =>
-    componentHandler(Number(value));
+  const componentStringHandler = (value: string) => componentHandler(value);
   const profitStringHandler = (value: string) => profitHandler(Number(value));
 
   return (
@@ -93,7 +95,7 @@ export default function BodyForm({
               <FormLabel>Jumlah Component</FormLabel>
               <NumberInput
                 min={0}
-                value={componenInput}
+                value={componentInput}
                 onChange={componentStringHandler}
               >
                 <NumberInputField placeholder="0" />
@@ -102,6 +104,12 @@ export default function BodyForm({
                   <NumberDecrementStepper />
                 </NumberInputStepper>
               </NumberInput>
+
+              <FormHelperText>
+                {/[+\-*/]/.test(componentInput)
+                  ? `Total Component: ${totalComponent}`
+                  : "Tips: Kamu bisa menggunakan + dan -"}
+              </FormHelperText>
             </FormControl>
           </Flex>
         </Section.Body>

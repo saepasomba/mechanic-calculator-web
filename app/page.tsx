@@ -17,11 +17,12 @@ import BodyForm from "./_dashboardSections/bodyForm";
 import { Analytics } from "@vercel/analytics/react";
 
 export default function Dashboard() {
-  const [componentInput, setComponentInput] = useState(0);
-  const [profitPercentage, setProfitPercentage] = useState(15);
+  const [componentInput, setComponentInput] = useState("");
+  const [profitPercentage, setProfitPercentage] = useState(20);
   const [finalPrice, setFinalPrice] = useState(0);
+  const [totalComponent, setTotalComponent] = useState(0);
 
-  const handleInputChange = (e: number) => setComponentInput(e);
+  const handleInputChange = (e: string) => setComponentInput(e);
   const handleProfitChange = (e: number) => setProfitPercentage(e);
 
   useEffect(() => {
@@ -37,17 +38,38 @@ export default function Dashboard() {
   }, [profitPercentage]);
 
   useEffect(() => {
-    if (componentInput < 0) {
-      setComponentInput(0);
+    if (componentInput.length == 1 && /^[+\-*/\s]+$/.test(componentInput)) {
+      setComponentInput("");
     }
+
+    let result: number = 0;
+    let processedInput = trimOperators(componentInput);
+
+    if (/^[0-9+\-*/\s]+$/.test(processedInput)) {
+      if (!/^[+\-*/\s]+$/.test(processedInput[processedInput.length - 1])) {
+        result = eval(processedInput);
+        setTotalComponent(result);
+      }
+    } else {
+      setTotalComponent(0);
+    }
+
+    // if (result < 0) {
+    //   setComponentInput("0");
+    // }
   }, [componentInput]);
 
   useEffect(() => {
-    let capital: number = componentInput * 0.55;
+    let capital: number = totalComponent * 0.55;
     let finalPrice = capital * ((100 + profitPercentage) / 100);
     finalPrice = Number(finalPrice.toFixed(2));
     setFinalPrice(finalPrice);
-  }, [componentInput, profitPercentage]);
+  }, [componentInput, profitPercentage, totalComponent]);
+
+  function trimOperators(str: string): string {
+    // Remove leading and trailing operators
+    return str.replace(/^[+\-*/]+|[+\-*/]+$/g, "");
+  }
 
   return (
     <Box>
@@ -81,7 +103,7 @@ export default function Dashboard() {
 
       <VStack spacing={12}>
         <CalculateView
-          componentInput={componentInput}
+          componentInput={totalComponent}
           profitPercentage={profitPercentage}
           finalPrice={finalPrice}
         />
@@ -90,7 +112,8 @@ export default function Dashboard() {
           componentHandler={handleInputChange}
           profitHandler={handleProfitChange}
           profitValue={profitPercentage}
-          componenInput={componentInput}
+          componentInput={componentInput}
+          totalComponent={totalComponent}
         />
       </VStack>
     </Box>
