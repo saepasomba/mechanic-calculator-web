@@ -72,15 +72,6 @@ export default function CalculateView({
         />
         <Section.Body>
           <Flex flexDir={"column"} gap={5}>
-            {/* <HStack>
-              <Text>
-                ({componentInput} * 0.55) * {100 + profitPercentage}% ={" "}
-              </Text>
-              <Text fontSize={"3xl"} fontWeight={"bold"} color="green.500">
-                ${finalPrice}
-              </Text>
-            </HStack> */}
-
             <Box>
               <TableContainer>
                 <Table variant="simple" size={"sm"} colorScheme="blackAlpha">
