@@ -95,17 +95,10 @@ export default function BodyForm({
             <FormControl>
               <FormLabel>Jumlah Component</FormLabel>
               <Input
-                min={0}
                 value={componentInput}
                 onChange={(event) => componentStringHandler(event.target.value)}
-                inputMode="text"
-              >
-                {/* <NumberInputField placeholder="0" />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper> */}
-              </Input>
+                placeholder="0"
+              ></Input>
 
               <FormHelperText>
                 {/[+\-*/]/.test(componentInput)
