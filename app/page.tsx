@@ -43,20 +43,19 @@ export default function Dashboard() {
     }
 
     let result: number = 0;
-    let processedInput = trimOperators(componentInput);
+    let processedInput = sanitizeAndValidateInput(componentInput);
+
+    if (processedInput !== componentInput) {
+      setComponentInput(processedInput);
+    }
+    processedInput = trimOperators(processedInput);
 
     if (/^[0-9+\-*/\s]+$/.test(processedInput)) {
-      if (!/^[+\-*/\s]+$/.test(processedInput[processedInput.length - 1])) {
-        result = eval(processedInput);
-        setTotalComponent(result);
-      }
+      result = eval(processedInput);
+      setTotalComponent(result);
     } else {
       setTotalComponent(0);
     }
-
-    // if (result < 0) {
-    //   setComponentInput("0");
-    // }
   }, [componentInput]);
 
   useEffect(() => {
@@ -69,6 +68,22 @@ export default function Dashboard() {
   function trimOperators(str: string): string {
     // Remove leading and trailing operators
     return str.replace(/^[+\-*/]+|[+\-*/]+$/g, "");
+  }
+
+  function sanitizeAndValidateInput(input: string): string {
+    // Remove any characters that are not digits, +, or -
+    const sanitizedInput = input.replace(/[^0-9+-]/g, "");
+
+    // Prevent consecutive operators
+    let validatedInput = sanitizedInput.replace(/([+-]){2,}/g, "$1"); // Replace sequences of more than one operator with a single one
+
+    // Remove leading zeros from numbers, but keep the operators intact
+    validatedInput = validatedInput
+      .split(/([+-])/)
+      .map((part) => (part.match(/^\d+$/) ? part.replace(/^0+/, "") : part))
+      .join("");
+
+    return validatedInput;
   }
 
   return (

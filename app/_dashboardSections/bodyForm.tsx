@@ -5,6 +5,7 @@ import {
   FormHelperText,
   FormLabel,
   HStack,
+  Input,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -93,17 +94,18 @@ export default function BodyForm({
 
             <FormControl>
               <FormLabel>Jumlah Component</FormLabel>
-              <NumberInput
+              <Input
                 min={0}
                 value={componentInput}
-                onChange={componentStringHandler}
+                onChange={(event) => componentStringHandler(event.target.value)}
+                inputMode="text"
               >
-                <NumberInputField placeholder="0" />
+                {/* <NumberInputField placeholder="0" />
                 <NumberInputStepper>
                   <NumberIncrementStepper />
                   <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
+                </NumberInputStepper> */}
+              </Input>
 
               <FormHelperText>
                 {/[+\-*/]/.test(componentInput)
