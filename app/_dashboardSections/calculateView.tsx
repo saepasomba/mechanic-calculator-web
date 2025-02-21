@@ -76,7 +76,7 @@ export default function CalculateView({
           <Flex flexDir={"column"} gap={5}>
             <Box>
               <TableContainer>
-                <Table variant="simple" size={"sm"} colorScheme="blackAlpha">
+                <Table variant="simple" size={"sm"} colorScheme={colorMode === "light" ? "blackAlpha" : "gray"}>
                   <Thead>
                     <Tr>
                       <Th>Elemen</Th>

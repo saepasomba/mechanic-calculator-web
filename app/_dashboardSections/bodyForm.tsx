@@ -18,7 +18,6 @@ import {
   SliderTrack,
   Text,
 } from "@chakra-ui/react";
-import { FaCog } from "react-icons/fa";
 
 interface BodyFormInterface {
   componentHandler: (e: string) => void;
@@ -100,7 +99,7 @@ export default function BodyForm({
                 placeholder="0"
               ></Input>
 
-              <FormHelperText>
+              <FormHelperText color={"gray.500"}>
                 {/[+\-*/]/.test(componentInput)
                   ? `Total Component: ${totalComponent}`
                   : "Tips: Kamu bisa menggunakan + dan -"}
