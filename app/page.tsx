@@ -14,7 +14,6 @@ import {
 import React, { ChangeEvent, useEffect, useState } from "react";
 import CalculateView from "./_dashboardSections/calculateView";
 import BodyForm from "./_dashboardSections/bodyForm";
-import { Analytics } from "@vercel/analytics/react";
 
 export default function Dashboard() {
   const [componentInput, setComponentInput] = useState("");
@@ -114,7 +113,7 @@ export default function Dashboard() {
         </Text>
       </Center>
 
-      <Divider my={5} />
+      <Divider my={5}/>
 
       <VStack spacing={12}>
         <CalculateView
