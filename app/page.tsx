@@ -1,23 +1,23 @@
 "use client";
-import Section from "@/components/section";
 import {
   Badge,
   Box,
   Center,
   Divider,
-  Flex,
   Heading,
   Link,
   Text,
   VStack,
 } from "@chakra-ui/react";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import CalculateView from "./_dashboardSections/calculateView";
 import BodyForm from "./_dashboardSections/bodyForm";
 
 export default function Dashboard() {
   const [componentInput, setComponentInput] = useState("");
-  const [profitPercentage, setProfitPercentage] = useState(20);
+  const [profitPercentage, setProfitPercentage] = useState<number>(() => {
+    return Number(global?.window?.localStorage.getItem("profitPercentage") ?? 20);
+  });
   const [finalPrice, setFinalPrice] = useState(0);
   const [totalComponent, setTotalComponent] = useState(0);
 
@@ -34,6 +34,8 @@ export default function Dashboard() {
     } else if (profitPercentage < 0) {
       setProfitPercentage(0);
     }
+
+    localStorage.setItem("profitPercentage", JSON.stringify(profitPercentage));
   }, [profitPercentage]);
 
   useEffect(() => {
@@ -63,6 +65,16 @@ export default function Dashboard() {
     finalPrice = Number(finalPrice.toFixed(2));
     setFinalPrice(finalPrice);
   }, [componentInput, profitPercentage, totalComponent]);
+
+  useEffect(() => {
+    let savedProfitPercentage: string | null = global?.window?.localStorage.getItem("profitPercentage");
+    if (savedProfitPercentage) {
+      setProfitPercentage(Number(savedProfitPercentage));
+    } else {
+      setProfitPercentage(20);
+    }
+
+  }, []);
 
   function trimOperators(str: string): string {
     // Remove leading and trailing operators

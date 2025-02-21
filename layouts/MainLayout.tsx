@@ -2,7 +2,7 @@
 
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { Center, Box, useColorMode, IconButton, Flex } from "@chakra-ui/react";
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 
 interface MainLayoutInterface {
   children: ReactNode;
@@ -10,6 +10,14 @@ interface MainLayoutInterface {
 
 export default function MainLayout({ children }: MainLayoutInterface) {
   const { colorMode, toggleColorMode } = useColorMode();
+
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
 
   return (
     <Center
