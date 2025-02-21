@@ -100,7 +100,7 @@ export default function Dashboard() {
   return (
     <Box>
       <Center my={5} flexDir={"column"}>
-        <Heading as={"h1"} fontSize={"xx-large"} textAlign={"left"}>
+        <Heading as={"h1"} fontSize={"xx-large"} textAlign={"left"} w={"full"}>
           Mechanic Calculator
           <Badge ml={2} fontSize={"xl"} colorScheme={"blue"}>
             Lite
