@@ -13,6 +13,7 @@ import {
   Th,
   Thead,
   Tr,
+  useColorMode,
   useToast,
 } from "@chakra-ui/react";
 import React from "react";
@@ -30,6 +31,7 @@ export default function CalculateView({
   finalPrice,
 }: CalculateViewInterface) {
   const toast = useToast();
+  const { colorMode } = useColorMode();
 
   let capital = componentInput * 0.55;
   capital = Number(capital.toFixed(2));
@@ -74,7 +76,7 @@ export default function CalculateView({
           <Flex flexDir={"column"} gap={5}>
             <Box>
               <TableContainer>
-                <Table variant="simple" size={"sm"} colorScheme="blackAlpha">
+                <Table variant="simple" size={"sm"} colorScheme={colorMode === "light" ? "blackAlpha" : "gray"}>
                   <Thead>
                     <Tr>
                       <Th>Elemen</Th>
@@ -98,8 +100,8 @@ export default function CalculateView({
                         <HStack justify={"end"}>
                           <IconButton
                             variant={"link"}
-                            colorScheme="blackAlpha"
-                            icon={<Icon as={FaRegCopy} />}
+                            colorScheme={colorMode === "light" ? "blackAlpha" : "grayAlpha"}
+                            icon={<Icon as={FaRegCopy}/>}
                             aria-label={"Copy icon"}
                             onClick={handleCopyToClipboard}
                           />

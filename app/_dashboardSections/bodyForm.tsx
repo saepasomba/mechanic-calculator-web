@@ -18,7 +18,6 @@ import {
   SliderTrack,
   Text,
 } from "@chakra-ui/react";
-import { FaCog } from "react-icons/fa";
 
 interface BodyFormInterface {
   componentHandler: (e: string) => void;
@@ -48,7 +47,7 @@ export default function BodyForm({
   return (
     <>
       <Section>
-        <Section.Header headerTitle="Input Detail" />
+        <Section.Header headerTitle="Input Detail"/>
         <Section.Body>
           <Flex flexDir={"column"} gap={5}>
             <FormControl>
@@ -61,10 +60,10 @@ export default function BodyForm({
                     min={0}
                     max={100}
                   >
-                    <NumberInputField />
+                    <NumberInputField/>
                     <NumberInputStepper>
-                      <NumberIncrementStepper />
-                      <NumberDecrementStepper />
+                      <NumberIncrementStepper/>
+                      <NumberDecrementStepper/>
                     </NumberInputStepper>
                   </NumberInput>
                   <Text>%</Text>
@@ -85,9 +84,9 @@ export default function BodyForm({
                     75%
                   </SliderMark>
                   <SliderTrack>
-                    <SliderFilledTrack />
+                    <SliderFilledTrack/>
                   </SliderTrack>
-                  <SliderThumb fontSize="sm" boxSize={5} />
+                  <SliderThumb fontSize="sm" boxSize={5}/>
                 </Slider>
               </HStack>
             </FormControl>
@@ -100,7 +99,7 @@ export default function BodyForm({
                 placeholder="0"
               ></Input>
 
-              <FormHelperText>
+              <FormHelperText color={"gray.500"}>
                 {/[+\-*/]/.test(componentInput)
                   ? `Total Component: ${totalComponent}`
                   : "Tips: Kamu bisa menggunakan + dan -"}
