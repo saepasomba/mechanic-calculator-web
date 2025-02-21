@@ -27,6 +27,7 @@ export default function MainLayout({ children }: MainLayoutInterface) {
       _dark={{ bg: "blackAlpha.500", color: "gray.300" }}
       maxW="100%"
       position="relative"
+      overflow={"hidden"}
     >
       <HighlightText text={
         <Text>
@@ -49,7 +50,7 @@ export default function MainLayout({ children }: MainLayoutInterface) {
       <Box
         minH="100vh"
         maxW="25rem"
-        py={5}
+        py={3}
         mx={2}
       >
         {children}
@@ -58,9 +59,11 @@ export default function MainLayout({ children }: MainLayoutInterface) {
       <Flex justifyContent="space-between" alignItems="center" position="fixed" bottom="5%" right="5%">
         <IconButton
           aria-label="Toggle dark mode"
+          bgColor={colorMode === "dark" ? "gray.800" : undefined}
           icon={colorMode === "light" ? <SunIcon/> : <MoonIcon/>}
           onClick={toggleColorMode}
-          variant="outline"
+          variant="solid"
+          opacity={1}
         />
       </Flex>
     </Center>
@@ -75,6 +78,7 @@ const HighlightText = ({ text }: { text: ReactElement<typeof Text> }) => {
       _dark={{ bgGradient: "linear(to-r, gray.700, gray.600, gray.700)" }}
       py={1}
       w="100%"
+      px={5}
       display="flex"
       justifyContent="center"
       alignItems="center"
