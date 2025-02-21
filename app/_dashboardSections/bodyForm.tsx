@@ -48,7 +48,7 @@ export default function BodyForm({
   return (
     <>
       <Section>
-        <Section.Header headerTitle="Input Detail" />
+        <Section.Header headerTitle="Input Detail"/>
         <Section.Body>
           <Flex flexDir={"column"} gap={5}>
             <FormControl>
@@ -61,10 +61,10 @@ export default function BodyForm({
                     min={0}
                     max={100}
                   >
-                    <NumberInputField />
+                    <NumberInputField/>
                     <NumberInputStepper>
-                      <NumberIncrementStepper />
-                      <NumberDecrementStepper />
+                      <NumberIncrementStepper/>
+                      <NumberDecrementStepper/>
                     </NumberInputStepper>
                   </NumberInput>
                   <Text>%</Text>
@@ -85,9 +85,9 @@ export default function BodyForm({
                     75%
                   </SliderMark>
                   <SliderTrack>
-                    <SliderFilledTrack />
+                    <SliderFilledTrack/>
                   </SliderTrack>
-                  <SliderThumb fontSize="sm" boxSize={5} />
+                  <SliderThumb fontSize="sm" boxSize={5}/>
                 </Slider>
               </HStack>
             </FormControl>
