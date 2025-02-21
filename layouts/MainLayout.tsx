@@ -16,7 +16,7 @@ export default function MainLayout({ children }: MainLayoutInterface) {
       flexDir="column"
       bg="gray.50"
       color="gray.900"
-      _dark={{ bg: "gray.800", color: "gray.300" }}
+      _dark={{ bg: "blackAlpha.500", color: "gray.300" }}
       maxW="100%"
       position="relative"
     >
@@ -29,7 +29,7 @@ export default function MainLayout({ children }: MainLayoutInterface) {
         {children}
       </Box>
 
-      <Flex justifyContent="space-between" alignItems="center" position="absolute" bottom="5%" right="5%">
+      <Flex justifyContent="space-between" alignItems="center" position="fixed" bottom="5%" right="5%">
         <IconButton
           aria-label="Toggle dark mode"
           icon={colorMode === "light" ? <SunIcon/> : <MoonIcon/>}
