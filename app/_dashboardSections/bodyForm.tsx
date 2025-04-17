@@ -18,22 +18,16 @@ import {
   SliderTrack,
   Text,
 } from "@chakra-ui/react";
+import React, { useCallback } from "react";
+import { BodyFormProps } from "../types/calculator";
 
-interface BodyFormInterface {
-  componentHandler: (e: string) => void;
-  profitHandler: (e: number) => void;
-  profitValue: number;
-  componentInput: string;
-  totalComponent: number;
-}
-
-export default function BodyForm({
+function BodyForm({
   componentHandler,
   profitHandler,
   profitValue,
   componentInput,
   totalComponent,
-}: BodyFormInterface) {
+}: BodyFormProps) {
   const labelStyles = {
     mt: "2",
     ml: "-2.5",
@@ -41,13 +35,27 @@ export default function BodyForm({
     opacity: 0.5,
   };
 
-  const componentStringHandler = (value: string) => componentHandler(value);
-  const profitStringHandler = (value: string) => profitHandler(Number(value));
+  // Memoize handler functions
+  const componentStringHandler = useCallback(
+    (value: string) => componentHandler(value),
+    [componentHandler]
+  );
+
+  const profitStringHandler = useCallback(
+    (value: string) => profitHandler(Number(value)),
+    [profitHandler]
+  );
+
+  const handleInputChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) =>
+      componentStringHandler(event.target.value),
+    [componentStringHandler]
+  );
 
   return (
     <>
       <Section>
-        <Section.Header headerTitle="Input Detail"/>
+        <Section.Header headerTitle="Input Detail" />
         <Section.Body>
           <Flex flexDir={"column"} gap={5}>
             <FormControl>
@@ -60,10 +68,10 @@ export default function BodyForm({
                     min={0}
                     max={100}
                   >
-                    <NumberInputField/>
+                    <NumberInputField />
                     <NumberInputStepper>
-                      <NumberIncrementStepper/>
-                      <NumberDecrementStepper/>
+                      <NumberIncrementStepper />
+                      <NumberDecrementStepper />
                     </NumberInputStepper>
                   </NumberInput>
                   <Text>%</Text>
@@ -84,9 +92,9 @@ export default function BodyForm({
                     75%
                   </SliderMark>
                   <SliderTrack>
-                    <SliderFilledTrack/>
+                    <SliderFilledTrack />
                   </SliderTrack>
-                  <SliderThumb fontSize="sm" boxSize={5}/>
+                  <SliderThumb fontSize="sm" boxSize={5} />
                 </Slider>
               </HStack>
             </FormControl>
@@ -95,7 +103,7 @@ export default function BodyForm({
               <FormLabel>Jumlah Component</FormLabel>
               <Input
                 value={componentInput}
-                onChange={(event) => componentStringHandler(event.target.value)}
+                onChange={handleInputChange}
                 placeholder="0"
               ></Input>
 
@@ -111,3 +119,6 @@ export default function BodyForm({
     </>
   );
 }
+
+// Use React.memo to prevent unnecessary re-renders
+export default React.memo(BodyForm);

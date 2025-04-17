@@ -16,30 +16,36 @@ import {
   useColorMode,
   useToast,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useCallback, useMemo } from "react";
 import { FaRegCopy } from "react-icons/fa";
+import { CalculateViewProps } from "../types/calculator";
 
-interface CalculateViewInterface {
-  componentInput: number;
-  profitPercentage: number;
-  finalPrice: number;
-}
-
-export default function CalculateView({
+function CalculateView({
   componentInput,
   profitPercentage,
   finalPrice,
-}: CalculateViewInterface) {
+  componentPrice,
+}: CalculateViewProps) {
   const toast = useToast();
   const { colorMode } = useColorMode();
 
-  let capital = componentInput * 0.55;
-  capital = Number(capital.toFixed(2));
+  // Memoize expensive calculations
+  const { capital, profit } = useMemo(() => {
+    const calculatedCapital = Number(
+      (componentInput * componentPrice).toFixed(2)
+    );
+    const calculatedProfit = Number(
+      (calculatedCapital * (profitPercentage / 100)).toFixed(2)
+    );
 
-  let profit = capital * (profitPercentage / 100);
-  profit = Number(profit.toFixed(2));
+    return {
+      capital: calculatedCapital,
+      profit: calculatedProfit,
+    };
+  }, [componentInput, componentPrice, profitPercentage]);
 
-  const handleCopyToClipboard = () => {
+  // Memoize event handlers
+  const handleCopyToClipboard = useCallback(() => {
     const textToCopy = `\$${finalPrice}`;
     navigator.clipboard
       .writeText(textToCopy)
@@ -63,20 +69,24 @@ export default function CalculateView({
           isClosable: true,
         });
       });
-  };
+  }, [finalPrice, toast]);
 
   return (
     <>
       <Section>
         <Section.Header
           headerTitle="Perhitungan Harga"
-          headerSubTitle="(Comp × Harga) × (100 + Profit)% = Harga"
+          headerSubTitle={`(Comp × $${componentPrice}) × (100 + Profit)% = Harga`}
         />
         <Section.Body>
           <Flex flexDir={"column"} gap={5}>
             <Box>
               <TableContainer>
-                <Table variant="simple" size={"sm"} colorScheme={colorMode === "light" ? "blackAlpha" : "gray"}>
+                <Table
+                  variant="simple"
+                  size={"sm"}
+                  colorScheme={colorMode === "light" ? "blackAlpha" : "gray"}
+                >
                   <Thead>
                     <Tr>
                       <Th>Elemen</Th>
@@ -100,8 +110,10 @@ export default function CalculateView({
                         <HStack justify={"end"}>
                           <IconButton
                             variant={"link"}
-                            colorScheme={colorMode === "light" ? "blackAlpha" : "grayAlpha"}
-                            icon={<Icon as={FaRegCopy}/>}
+                            colorScheme={
+                              colorMode === "light" ? "blackAlpha" : "grayAlpha"
+                            }
+                            icon={<Icon as={FaRegCopy} />}
                             aria-label={"Copy icon"}
                             onClick={handleCopyToClipboard}
                           />
@@ -125,3 +137,6 @@ export default function CalculateView({
     </>
   );
 }
+
+// Use React.memo to prevent unnecessary re-renders
+export default React.memo(CalculateView);
