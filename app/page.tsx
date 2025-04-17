@@ -10,118 +10,103 @@ import {
   VStack,
   HStack,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import CalculateView from "./_dashboardSections/calculateView";
 import BodyForm from "./_dashboardSections/bodyForm";
 import Settings from "./_dashboardSections/settings";
+import {
+  sanitizeAndValidateInput,
+  trimOperators,
+  safeEvaluate,
+} from "./utils/calculatorUtils";
+import { useLocalStorage } from "./hooks/useLocalStorage";
+import { CalculationResult } from "./types/calculator";
 
 export default function Dashboard() {
+  // Use custom hook for localStorage with debouncing
+  const [profitPercentage, setProfitPercentage] = useLocalStorage<number>(
+    "profitPercentage",
+    20
+  );
+  const [componentPrice, setComponentPrice] = useLocalStorage<number>(
+    "componentPrice",
+    0.6
+  );
+
   const [componentInput, setComponentInput] = useState("");
-  const [profitPercentage, setProfitPercentage] = useState<number>(() => {
-    return Number(
-      global?.window?.localStorage.getItem("profitPercentage") ?? 20
-    );
-  });
-  const [componentPrice, setComponentPrice] = useState<number>(() => {
-    return Number(
-      global?.window?.localStorage.getItem("componentPrice") ?? 0.6
-    );
-  });
-  const [finalPrice, setFinalPrice] = useState(0);
-  const [totalComponent, setTotalComponent] = useState(0);
-
-  const handleInputChange = (e: string) => setComponentInput(e);
-  const handleProfitChange = (e: number) => setProfitPercentage(e);
-  const handleComponentPriceChange = (e: number) => setComponentPrice(e);
-
-  useEffect(() => {
-    if (profitPercentage.toString() == "-") {
-      setProfitPercentage(0);
+  const [calculationResult, setCalculationResult] = useState<CalculationResult>(
+    {
+      totalComponent: 0,
+      capital: 0,
+      profit: 0,
+      finalPrice: 0,
     }
+  );
 
-    if (profitPercentage > 100) {
-      setProfitPercentage(100);
-    } else if (profitPercentage < 0) {
-      setProfitPercentage(0);
-    }
+  // Memoize handler functions to prevent recreation on each render
+  const handleInputChange = useCallback((value: string) => {
+    setComponentInput(value);
+  }, []);
 
-    localStorage.setItem("profitPercentage", JSON.stringify(profitPercentage));
-  }, [profitPercentage]);
+  const handleProfitChange = useCallback(
+    (value: number) => {
+      // Validate profit percentage
+      if (value.toString() === "-") {
+        setProfitPercentage(0);
+      } else if (value > 100) {
+        setProfitPercentage(100);
+      } else if (value < 0) {
+        setProfitPercentage(0);
+      } else {
+        setProfitPercentage(value);
+      }
+    },
+    [setProfitPercentage]
+  );
 
+  const handleComponentPriceChange = useCallback(
+    (value: number) => {
+      setComponentPrice(value < 0 ? 0 : value);
+    },
+    [setComponentPrice]
+  );
+
+  // Consolidated effect for all calculations
   useEffect(() => {
-    if (componentPrice < 0) {
-      setComponentPrice(0);
-    }
-
-    localStorage.setItem("componentPrice", JSON.stringify(componentPrice));
-  }, [componentPrice]);
-
-  useEffect(() => {
-    if (componentInput.length == 1 && /^[+\-*/\s]+$/.test(componentInput)) {
+    // Handle component input validation
+    if (componentInput.length === 1 && /^[+\-*/\s]+$/.test(componentInput)) {
       setComponentInput("");
+      return;
     }
 
-    let result: number = 0;
+    // Process input
     let processedInput = sanitizeAndValidateInput(componentInput);
-
     if (processedInput !== componentInput) {
       setComponentInput(processedInput);
     }
     processedInput = trimOperators(processedInput);
 
-    if (/^[0-9+\-*/\s]+$/.test(processedInput)) {
-      result = eval(processedInput);
-      setTotalComponent(result);
-    } else {
-      setTotalComponent(0);
-    }
-  }, [componentInput]);
+    // Calculate component total
+    const totalComponent = safeEvaluate(processedInput);
 
-  useEffect(() => {
-    let capital: number = totalComponent * componentPrice;
-    let finalPrice = capital * ((100 + profitPercentage) / 100);
-    finalPrice = Number(finalPrice.toFixed(2));
-    setFinalPrice(finalPrice);
-  }, [componentInput, profitPercentage, totalComponent, componentPrice]);
+    // Calculate financial data
+    const capital = Number((totalComponent * componentPrice).toFixed(2));
+    const profit = Number((capital * (profitPercentage / 100)).toFixed(2));
+    const finalPrice = Number(
+      (capital * ((100 + profitPercentage) / 100)).toFixed(2)
+    );
 
-  useEffect(() => {
-    let savedProfitPercentage: string | null =
-      global?.window?.localStorage.getItem("profitPercentage");
-    if (savedProfitPercentage) {
-      setProfitPercentage(Number(savedProfitPercentage));
-    } else {
-      setProfitPercentage(20);
-    }
+    // Update state with all calculations at once
+    setCalculationResult({
+      totalComponent,
+      capital,
+      profit,
+      finalPrice,
+    });
+  }, [componentInput, profitPercentage, componentPrice]);
 
-    let savedComponentPrice: string | null =
-      global?.window?.localStorage.getItem("componentPrice");
-    if (savedComponentPrice) {
-      setComponentPrice(Number(savedComponentPrice));
-    } else {
-      setComponentPrice(0.6);
-    }
-  }, []);
-
-  function trimOperators(str: string): string {
-    // Remove leading and trailing operators
-    return str.replace(/^[+\-*/]+|[+\-*/]+$/g, "");
-  }
-
-  function sanitizeAndValidateInput(input: string): string {
-    // Remove any characters that are not digits, +, or -
-    const sanitizedInput = input.replace(/[^0-9+-]/g, "");
-
-    // Prevent consecutive operators
-    let validatedInput = sanitizedInput.replace(/([+-]){2,}/g, "$1"); // Replace sequences of more than one operator with a single one
-
-    // Remove leading zeros from numbers, but keep the operators intact
-    validatedInput = validatedInput
-      .split(/([+-])/)
-      .map((part) => (part.match(/^\d+$/) ? part.replace(/^0+/, "") : part))
-      .join("");
-
-    return validatedInput;
-  }
+  // Get values from calculation result
+  const { totalComponent, finalPrice } = calculationResult;
 
   return (
     <Box>

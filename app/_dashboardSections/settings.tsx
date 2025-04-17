@@ -25,34 +25,34 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { SettingsIcon } from "@chakra-ui/icons";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
+import { SettingsProps } from "../types/calculator";
 
-interface SettingsProps {
-  componentPrice: number;
-  setComponentPrice: (value: number) => void;
-}
-
-export default function Settings({
-  componentPrice,
-  setComponentPrice,
-}: SettingsProps) {
+function Settings({ componentPrice, setComponentPrice }: SettingsProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [internalComponentPrice, setInternalComponentPrice] = useState<string>(
     componentPrice.toString()
   );
 
-  const handleComponentPriceChange = (valueAsString: string) => {
-    setInternalComponentPrice(valueAsString);
-    const value = parseFloat(valueAsString);
-    if (!isNaN(value) && value >= 0) {
-      setComponentPrice(value);
-    } else {
-      setComponentPrice(0);
-    }
-  };
+  // Memoize handlers
+  const handleComponentPriceChange = useCallback(
+    (valueAsString: string) => {
+      setInternalComponentPrice(valueAsString);
+      if (valueAsString.endsWith(".")) {
+        valueAsString += "0";
+      }
+      const value = parseFloat(valueAsString);
+      if (!isNaN(value) && value >= 0) {
+        setComponentPrice(value);
+      } else {
+        setComponentPrice(0);
+      }
+    },
+    [setComponentPrice]
+  );
 
-  const format = (val: string) => `$` + val;
+  const format = useCallback((val: string) => `$${val}`, []);
 
   return (
     <>
@@ -101,3 +101,6 @@ export default function Settings({
     </>
   );
 }
+
+// Use React.memo to prevent unnecessary re-renders
+export default React.memo(Settings);

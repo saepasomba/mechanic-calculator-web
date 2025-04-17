@@ -16,32 +16,36 @@ import {
   useColorMode,
   useToast,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useCallback, useMemo } from "react";
 import { FaRegCopy } from "react-icons/fa";
+import { CalculateViewProps } from "../types/calculator";
 
-interface CalculateViewInterface {
-  componentInput: number;
-  profitPercentage: number;
-  finalPrice: number;
-  componentPrice: number;
-}
-
-export default function CalculateView({
+function CalculateView({
   componentInput,
   profitPercentage,
   finalPrice,
   componentPrice,
-}: CalculateViewInterface) {
+}: CalculateViewProps) {
   const toast = useToast();
   const { colorMode } = useColorMode();
 
-  let capital = componentInput * componentPrice;
-  capital = Number(capital.toFixed(2));
+  // Memoize expensive calculations
+  const { capital, profit } = useMemo(() => {
+    const calculatedCapital = Number(
+      (componentInput * componentPrice).toFixed(2)
+    );
+    const calculatedProfit = Number(
+      (calculatedCapital * (profitPercentage / 100)).toFixed(2)
+    );
 
-  let profit = capital * (profitPercentage / 100);
-  profit = Number(profit.toFixed(2));
+    return {
+      capital: calculatedCapital,
+      profit: calculatedProfit,
+    };
+  }, [componentInput, componentPrice, profitPercentage]);
 
-  const handleCopyToClipboard = () => {
+  // Memoize event handlers
+  const handleCopyToClipboard = useCallback(() => {
     const textToCopy = `\$${finalPrice}`;
     navigator.clipboard
       .writeText(textToCopy)
@@ -65,7 +69,7 @@ export default function CalculateView({
           isClosable: true,
         });
       });
-  };
+  }, [finalPrice, toast]);
 
   return (
     <>
@@ -133,3 +137,6 @@ export default function CalculateView({
     </>
   );
 }
+
+// Use React.memo to prevent unnecessary re-renders
+export default React.memo(CalculateView);
