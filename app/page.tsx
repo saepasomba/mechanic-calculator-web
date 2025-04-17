@@ -8,21 +8,31 @@ import {
   Link,
   Text,
   VStack,
+  HStack,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import CalculateView from "./_dashboardSections/calculateView";
 import BodyForm from "./_dashboardSections/bodyForm";
+import Settings from "./_dashboardSections/settings";
 
 export default function Dashboard() {
   const [componentInput, setComponentInput] = useState("");
   const [profitPercentage, setProfitPercentage] = useState<number>(() => {
-    return Number(global?.window?.localStorage.getItem("profitPercentage") ?? 20);
+    return Number(
+      global?.window?.localStorage.getItem("profitPercentage") ?? 20
+    );
+  });
+  const [componentPrice, setComponentPrice] = useState<number>(() => {
+    return Number(
+      global?.window?.localStorage.getItem("componentPrice") ?? 0.6
+    );
   });
   const [finalPrice, setFinalPrice] = useState(0);
   const [totalComponent, setTotalComponent] = useState(0);
 
   const handleInputChange = (e: string) => setComponentInput(e);
   const handleProfitChange = (e: number) => setProfitPercentage(e);
+  const handleComponentPriceChange = (e: number) => setComponentPrice(e);
 
   useEffect(() => {
     if (profitPercentage.toString() == "-") {
@@ -37,6 +47,14 @@ export default function Dashboard() {
 
     localStorage.setItem("profitPercentage", JSON.stringify(profitPercentage));
   }, [profitPercentage]);
+
+  useEffect(() => {
+    if (componentPrice < 0) {
+      setComponentPrice(0);
+    }
+
+    localStorage.setItem("componentPrice", JSON.stringify(componentPrice));
+  }, [componentPrice]);
 
   useEffect(() => {
     if (componentInput.length == 1 && /^[+\-*/\s]+$/.test(componentInput)) {
@@ -60,20 +78,28 @@ export default function Dashboard() {
   }, [componentInput]);
 
   useEffect(() => {
-    let capital: number = totalComponent * 0.55;
+    let capital: number = totalComponent * componentPrice;
     let finalPrice = capital * ((100 + profitPercentage) / 100);
     finalPrice = Number(finalPrice.toFixed(2));
     setFinalPrice(finalPrice);
-  }, [componentInput, profitPercentage, totalComponent]);
+  }, [componentInput, profitPercentage, totalComponent, componentPrice]);
 
   useEffect(() => {
-    let savedProfitPercentage: string | null = global?.window?.localStorage.getItem("profitPercentage");
+    let savedProfitPercentage: string | null =
+      global?.window?.localStorage.getItem("profitPercentage");
     if (savedProfitPercentage) {
       setProfitPercentage(Number(savedProfitPercentage));
     } else {
       setProfitPercentage(20);
     }
 
+    let savedComponentPrice: string | null =
+      global?.window?.localStorage.getItem("componentPrice");
+    if (savedComponentPrice) {
+      setComponentPrice(Number(savedComponentPrice));
+    } else {
+      setComponentPrice(0.6);
+    }
   }, []);
 
   function trimOperators(str: string): string {
@@ -100,12 +126,14 @@ export default function Dashboard() {
   return (
     <Box>
       <Center my={5} flexDir={"column"}>
-        <Heading as={"h1"} fontSize={"xx-large"} textAlign={"left"} w={"full"}>
-          Mechanic Calculator
-          <Badge ml={2} fontSize={"xl"} colorScheme={"blue"}>
-            Lite
-          </Badge>
-        </Heading>
+        <HStack w="full" justify="space-between" align="center">
+          <Heading as={"h1"} fontSize={"xx-large"} textAlign={"left"}>
+            Mechanic Calculator
+            <Badge ml={2} fontSize={"xl"} colorScheme={"blue"}>
+              Lite
+            </Badge>
+          </Heading>
+        </HStack>
         <Text textAlign={"left"} w="100%" fontSize={"sm"} color={"gray.400"}>
           Made by{" "}
           <Link
@@ -123,15 +151,27 @@ export default function Dashboard() {
           </Link>{" "}
           / Len Duffield
         </Text>
+        <HStack
+          w="full"
+          justify="space-between"
+          align="end"
+          justifyContent={`end`}
+        >
+          <Settings
+            componentPrice={componentPrice}
+            setComponentPrice={handleComponentPriceChange}
+          />
+        </HStack>
       </Center>
 
-      <Divider my={5}/>
+      <Divider my={5} />
 
       <VStack spacing={12}>
         <CalculateView
           componentInput={totalComponent}
           profitPercentage={profitPercentage}
           finalPrice={finalPrice}
+          componentPrice={componentPrice}
         />
 
         <BodyForm
